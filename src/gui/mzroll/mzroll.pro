@@ -81,7 +81,7 @@ win32 {
 }
 
 
-LIBS +=  -lmaven -lobiwarp -lpugixml -lneural -lcsvparser -lpls -lErrorHandling -lLogger -lcdfread -lnetcdf -lz -lpollyCLI               #64bit
+LIBS +=  -lmaven -lobiwarp -lpugixml -lneural -lcsvparser -lpls -lErrorHandling -lLogger -lcdfread -lnetcdf -lz -lpollyCLI -lcurl              #64bit
 
 macx {
 
@@ -191,7 +191,8 @@ HEADERS +=  stable.h \
                     pollywaitdialog.h \
                     peaktabledeletiondialog.h \
                     notificator.h \
-                    notificator_p.h
+                    notificator_p.h \
+                    uploadData.h
 
 
 
@@ -264,7 +265,8 @@ database.cpp \
     gettingstarted.cpp \
     pollywaitdialog.cpp \
     peaktabledeletiondialog.cpp \
-    notificator.cpp
+    notificator.cpp \
+    uploadData.cpp
 
 
 contains (DEFINES,EMBEDHTTPSERVER) {
