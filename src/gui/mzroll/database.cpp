@@ -454,8 +454,8 @@ int Database::loadCompoundCSVFile(string filename){
     int lineCount=0;
     map<string, int>header;
     vector<string> headers;
-    static const string allHeadersarr[] = {"mz", "rt", "expectedrt", "charge", "formula", "id", "name", 
-    "compound", "precursormz", "productmz", "collisionenergy", "Q1", "Q3", "CE", "category", "polarity"};
+    static const string allHeadersarr[] = {"mz", "rt", "expectedrt", "charge", "formula", "productformula", "id",
+    "name", "compound", "precursormz", "productmz", "collisionenergy", "Q1", "Q3", "CE", "category", "polarity"};
     vector<string> allHeaders (allHeadersarr, allHeadersarr + sizeof(allHeadersarr) / sizeof(allHeadersarr[0]) );
 
     //assume that files are tab delimited, unless matched ".csv", then comma delimited
@@ -496,7 +496,7 @@ int Database::loadCompoundCSVFile(string filename){
             continue;
         }
 
-        string id, name, formula;
+        string id, name, formula, productformula;
         float rt=0;
         float mz=0;
         float charge=0;
@@ -516,6 +516,7 @@ int Database::loadCompoundCSVFile(string filename){
         if ( header.count("name")&& header["name"]<N) 	 name = fields[ header["name"] ];
         if ( header.count("compound")&& header["compound"]<N) 	 name = fields[ header["compound"] ];
 
+        if ( header.count("productformula")&& header["productformula"]<N) productformula = fields[header["productformula"]];
         if ( header.count("precursormz") && header["precursormz"]<N) precursormz=string2float(fields[ header["precursormz"]]);
         if ( header.count("productmz") && header["productmz"]<N)  productmz = string2float(fields[header["productmz"]]);
         if ( header.count("collisionenergy") && header["collisionenergy"]<N) collisionenergy=string2float(fields[ header["collisionenergy"]]);
@@ -556,6 +557,7 @@ int Database::loadCompoundCSVFile(string filename){
             Compound* compound = new Compound(id,name,formula,charge);
 
             compound->expectedRt = rt;
+            compound->productFormula = productformula;
 
             if (mz == 0) mz = MassCalculator::computeMass(formula,charge);
             compound->mass = mz;

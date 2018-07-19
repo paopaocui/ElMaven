@@ -70,6 +70,7 @@ class Compound{
 
         /** QQQ mapping */
         string method_id;   /**@param  -  TODO*/
+        string productFormula;  /**@param -  formula of product comppound */
         float precursorMz;	/**@param  -  QQQ parent ion  mz value   */
         float productMz;    /**@param  -  QQQ child ion   mz value */
         float collisionEnergy; /**@param  -   QQQ collision energy of this compound   */

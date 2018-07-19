@@ -74,7 +74,8 @@ void CSVReports::insertGroupReportColumnNamesintoCSVFile(string outputfile,bool 
         QStringList groupReportcolnames;
         groupReportcolnames << "label" << "metaGroupId" << "groupId" << "goodPeakCount"
                 << "medMz" << "medRt" << "maxQuality" << "isotopeLabel" << "compound"
-                << "compoundId" << "formula" << "expectedRtDiff" << "ppmDiff" << "parent";
+                << "compoundId" << "formula" << "productFormula" << "expectedRtDiff"
+                << "ppmDiff" << "precursorMz" << "parent";
         int cohort_offset = groupReportcolnames.size() - 1;
         QString header = groupReportcolnames.join(SEP.c_str());
         groupReport << header.toStdString();
@@ -99,10 +100,10 @@ void CSVReports::insertPeakReportColumnNamesintoCSVFile(){
 
     if (peakReport.is_open()) {
         QStringList peakReportcolnames;
-        peakReportcolnames << "groupId" << "compound" << "compoundId" << "formula" << "sample" << "peakMz"
-                << "medianMz" << "baseMz" << "rt" << "rtmin" << "rtmax" << "quality"
-                << "peakIntensity" << "peakArea" << "peakSplineArea" << "peakAreaTop"
-                << "peakAreaCorrected" << "peakAreaTopCorrected"
+        peakReportcolnames << "groupId" << "compound" << "compoundId" << "formula" << "productFormula"
+                << "sample" << "peakMz" << "medianMz" << "baseMz" << "precursorMz" << "rt" << "rtmin"
+                << "rtmax" << "quality" << "peakIntensity" << "peakArea" << "peakSplineArea"
+                << "peakAreaTop" << "peakAreaCorrected" << "peakAreaTopCorrected"
                 << "noNoiseObs" << "signalBaseLineRatio"
                 << "fromBlankSample";
         QString header = peakReportcolnames.join(SEP.c_str());
@@ -287,6 +288,7 @@ void CSVReports::writeGroupInfo(PeakGroup* group) {
     string compoundName = "";
     string compoundID = "";
     string formula = "";
+    string productFormula = "";
     string categoryString;
     float expectedRtDiff = 0;
     float ppmDist = 0;
@@ -296,6 +298,7 @@ void CSVReports::writeGroupInfo(PeakGroup* group) {
         compoundName = sanitizeString(group->compound->name.c_str()).toStdString();
         compoundID   = sanitizeString(group->compound->id.c_str()).toStdString();
         formula = sanitizeString(group->compound->formula.c_str()).toStdString();
+        productFormula = sanitizeString(group->compound->productFormula.c_str()).toStdString();
         if (!group->compound->formula.empty()) {
             int charge = getMavenParameters()->getCharge(group->compound);
             if (group->parent != NULL) {
@@ -323,9 +326,17 @@ void CSVReports::writeGroupInfo(PeakGroup* group) {
     groupReport << SEP << compoundName;
     groupReport << SEP << compoundID;
     groupReport << SEP << formula;
+    groupReport << SEP << productFormula;
     //groupReport << SEP << categoryString;
     groupReport << SEP << expectedRtDiff;
     groupReport << SEP << ppmDist;
+
+    if (group->compound->precursorMz == 0 && group->compound->productMz == 0) {
+        groupReport << SEP << group->compound->mass;
+    }
+    else {
+        groupReport << SEP << group->compound->precursorMz;
+    }
 
     if (group->parent != NULL) {
         groupReport << SEP << group->parent->meanMz;
@@ -355,10 +366,12 @@ void CSVReports::writePeakInfo(PeakGroup* group) {
     string compoundName = "";
     string compoundID = "";
     string formula = "";
+    string productFormula = "";
     if (group->compound != NULL) {
         compoundName = sanitizeString(group->compound->name.c_str()).toStdString();
         compoundID   = sanitizeString(group->compound->id.c_str()).toStdString();
         formula = sanitizeString(group->compound->formula.c_str()).toStdString();
+        productFormula = sanitizeString(group->compound->productFormula.c_str()).toStdString();
     }
 
     if (selectionFlag == 2) {
@@ -387,11 +400,20 @@ void CSVReports::writePeakInfo(PeakGroup* group) {
                 << compoundName << SEP
                 << compoundID << SEP
                 << formula << SEP
+                << productFormula << SEP
                 << sampleName << SEP
                 << peak.peakMz <<  SEP
                 << peak.medianMz <<  SEP
-                << peak.baseMz <<  SEP
-                << setprecision(3)
+                << peak.baseMz << SEP;
+        
+        if (group->compound->precursorMz == 0 && group->compound->productMz == 0) {
+            peakReport << group->compound->mass << SEP;
+        }
+        else {
+            peakReport << group->compound->precursorMz << SEP;
+        }
+
+        peakReport << setprecision(3)
                 << peak.rt <<  SEP
                 << peak.rtmin <<  SEP
                 << peak.rtmax <<  SEP
