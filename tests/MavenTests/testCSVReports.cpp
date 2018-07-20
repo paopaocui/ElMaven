@@ -51,8 +51,8 @@ void TestCSVReports::testopenGroupReport() {
     QStringList colnames;
     colnames << "label" << "metaGroupId" << "groupId" << "goodPeakCount"
                 << "medMz" << "medRt" << "maxQuality" << "isotopeLabel" << "compound"
-                << "compoundId" << "formula" << "expectedRtDiff" << "ppmDiff" 
-                << "parent" << "testsample_1" << "bk_#sucyxpe_1_10";
+                << "compoundId" << "formula" << "productFormula" << "expectedRtDiff"
+                << "ppmDiff" << "precursorMz" << "parent" << "testsample_1" << "bk_#sucyxpe_1_10";
 
     QString header = colnames.join(",");
     QVERIFY(header.toStdString()==temp);
@@ -60,7 +60,7 @@ void TestCSVReports::testopenGroupReport() {
     colnames.clear();
     getline(ifile, temp);
     remove(outputfile.c_str());
-    for(unsigned int i=0; i < 15; i++) { colnames << ","; }
+    for(unsigned int i=0; i < 17; i++) { colnames << ","; }
     header = colnames.join("");
     QVERIFY(header.toStdString()==temp);
 }
@@ -78,9 +78,9 @@ void TestCSVReports::testopenPeakReport() {
 
 
     QStringList colnames;
-    colnames << "groupId" << "compound" << "compoundId" << "formula" << "sample" << "peakMz"
-             << "medianMz" << "baseMz" << "rt" << "rtmin" << "rtmax" << "quality"
-             << "peakIntensity" << "peakArea" << "peakSplineArea" << "peakAreaTop"
+    colnames << "groupId" << "compound" << "compoundId" << "formula" << "productFormula" << "sample"
+             << "peakMz" << "medianMz" << "baseMz" << "precursorMz" << "rt" << "rtmin" << "rtmax"
+             << "quality" << "peakIntensity" << "peakArea" << "peakSplineArea" << "peakAreaTop"
              << "peakAreaCorrected" << "peakAreaTopCorrected" << "noNoiseObs" << "signalBaseLineRatio"
              << "fromBlankSample";
 
@@ -166,6 +166,6 @@ void TestCSVReports::testaddGroups() {
     mzUtils::splitNew(temp, "," , header);
 
     //check if number of columns is correct
-    QVERIFY(found != std::string::npos && header.size() == 16);
+    QVERIFY(found != std::string::npos && header.size() == 18);
 
 }
