@@ -29,6 +29,10 @@ unix: {
     LIBS +=  -lboost_signals -lErrorHandling -lobiwarp
 }
 
+linux: {
+    DEFINES += ZLIB
+}
+
 #INSTALL_LIBDIR = $$(INSTALL_LIBDIR)
 #unix {
 #  !mac {

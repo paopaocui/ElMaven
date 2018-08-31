@@ -1,5 +1,5 @@
 #include "mzUtils.h"
-
+#include <cstdio>
 
 /**
  * random collection of useful functions 
@@ -882,46 +882,107 @@ Series:  Prentice-Hall Series in Automatic Computation
         std::string outstring;
 
 #ifdef ZLIB
-        z_stream zs;                        // z_stream is zlib's control structure
-        memset(&zs, 0, sizeof(zs));
-
-
-
-        if (inflateInit(&zs) != Z_OK)
-            throw(std::runtime_error("inflateInit failed while decompressing."));
-
-        zs.next_in = (Bytef*)str.data();
-        zs.avail_in = str.size();
-
+        #define CHUNK 16384
+        /**
+            taken from https://zlib.net/zlib_how.html
+          */
+//        FILE* source = outstring;
+//        FILE* dest = fopen("maven_uncompress", "w");
+//        setbuf(source, const_cast<char*>(str.data()));
         int ret;
-        char outbuffer[32768];
+        unsigned have;
+        z_stream strm;
+        unsigned char in[CHUNK];
+        unsigned char out[CHUNK];
 
-        // get the decompressed bytes blockwise using repeated calls to inflate
+        /* allocate inflate state */
+        strm.zalloc = Z_NULL;
+        strm.zfree = Z_NULL;
+        strm.opaque = Z_NULL;
+        strm.avail_in = 0;
+        strm.next_in = Z_NULL;
+        ret = inflateInit(&strm);
+        if (ret != Z_OK)
+            return ret;
+
+        /* decompress until deflate stream ends or end of file */
         do {
-            zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
-            zs.avail_out = sizeof(outbuffer);
-
-            ret = inflate(&zs, Z_NO_FLUSH);
-
-            if (outstring.size() < zs.total_out) {
-                outstring.append(outbuffer,
-                        zs.total_out - outstring.size());
+            strm.avail_in = fread(in, 1, CHUNK, source);
+            if (ferror(source)) {
+                (void)inflateEnd(&strm);
+                return Z_ERRNO;
             }
+            if (strm.avail_in == 0)
+                break;
+            strm.next_in = in;
 
-        } while (ret == Z_OK);
+            /* run inflate() on input until output buffer not full */
+            do {
+                strm.avail_out = CHUNK;
+                strm.next_out = out;
+                ret = inflate(&strm, Z_NO_FLUSH);
+                assert(ret != Z_STREAM_ERROR);  /* state not clobbered */
+                switch (ret) {
+                case Z_NEED_DICT:
+                    ret = Z_DATA_ERROR;     /* and fall through */
+                case Z_DATA_ERROR:
+                case Z_MEM_ERROR:
+                    (void)inflateEnd(&strm);
+                    return ret;
+                }
+                have = CHUNK - strm.avail_out;
+                if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
+                    (void)inflateEnd(&strm);
+                    return Z_ERRNO;
+                }
+            } while (strm.avail_out == 0);
 
-        cerr << "B..." << "ret=" << ret;
+            /* done when inflate() says it's done */
+        } while (ret != Z_STREAM_END);
 
-        inflateEnd(&zs);
+        /* clean up and return */
+        (void)inflateEnd(&strm);
+        return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
+//        z_stream zs;                        // z_stream is zlib's control structure
+//        memset(&zs, 0, sizeof(zs));
 
-        if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
-            std::ostringstream oss;
-            oss << "Exception during zlib decompression: (" << ret << ") "
-                << zs.msg;
-            // throw(std::runtime_error(oss.str()));
-        }
 
-        cerr << "C...";
+
+//        if (inflateInit(&zs) != Z_OK)
+//            throw(std::runtime_error("inflateInit failed while decompressing."));
+
+//        zs.next_in = (Bytef*)str.data();
+//        zs.avail_in = str.size();
+
+//        int ret;
+//        char outbuffer[32768];
+
+//        // get the decompressed bytes blockwise using repeated calls to inflate
+//        do {
+//            zs.next_out = reinterpret_cast<Bytef*>(outbuffer);
+//            zs.avail_out = sizeof(outbuffer);
+
+//            ret = inflate(&zs, Z_NO_FLUSH);
+
+//            if (outstring.size() < zs.total_out) {
+//                outstring.append(outbuffer,
+//                        zs.total_out - outstring.size());
+//            }
+
+//        } while (ret == Z_OK);
+
+//        cerr << "B..." << "ret=" << ret;
+
+//        inflateEnd(&zs);
+
+//        if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
+//            std::ostringstream oss;
+//            oss << "Exception during zlib decompression: (" << ret << ") "
+//                << zs.msg;
+//            // throw(std::runtime_error(oss.str()));
+//        }
+
+//        cerr << "C...";
 #endif
         return outstring;
     }
