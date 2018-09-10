@@ -15,13 +15,6 @@
 [![DOI](https://zenodo.org/badge/70220005.svg)](https://zenodo.org/badge/latestdoi/70220005)
 
 ## Table of contents
-<<<<<<< HEAD
-- [Travis Build](#travis-build)
-- [Digital Object Identifier (DOI)](#digital-object-identifier-doi)
-- [Table of contents](#table-of-contents)
-=======
-
->>>>>>> f975f173a30cc6a5a67bae1c1d256a3f15f7000d
 - [Travis Build](#travis-build)
 - [Digital Object Identifier (DOI)](#digital-object-identifier-doi)
 - [Table of contents](#table-of-contents)
