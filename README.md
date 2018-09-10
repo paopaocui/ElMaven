@@ -22,6 +22,9 @@
 =======
 
 >>>>>>> f975f173a30cc6a5a67bae1c1d256a3f15f7000d
+- [Travis Build](#travis-build)
+- [Digital Object Identifier (DOI)](#digital-object-identifier-doi)
+- [Table of contents](#table-of-contents)
 - [Download](#download)
 - [Build](#build)
   - [Windows](#windows)
@@ -189,23 +192,6 @@ Pull requests must include relevant unit tests. All the functional features are 
 
 ## Contributors
 
-<<<<<<< HEAD
-*	[Maven team at Princeton University](http://genomics-pubs.princeton.edu/mzroll/index.php)
-*	[Eugene Melamud](https://www.calicolabs.com/team-member/eugene-melamud/)
-*	[Victor Chubukov](https://github.com/chubukov)
-*	[George Sabu](https://github.com/GeorgeSabu)
-*	[Sahil](https://github.com/sahil21)
-*	[Raghav Sehgal](https://github.com/Raghavdata)
-*	[Shubhra Agrawal](https://github.com/shubhra-agrawal)
-*	[Raghuram Reddy](https://github.com/r-el-maya)
-*	[Rishabh Gupta](https://github.com/rish9511)
-*	[Pankaj Kumar](https://github.com/IpankajI)
-*	[Rahul Kumar](https://github.com/rkdahmiwal)
-*	[Giridhari](https://github.com/Giridhari013)
-*	[Kiran Varghese](https://github.com/kiranvarghese2)
-*	[Naman Gupta](https://github.com/naman)
-* [Avijit Zutshi](https://github.com/avijitzutshi)
-=======
 - [Maven team at Princeton University](http://genomics-pubs.princeton.edu/mzroll/index.php)
 - [Eugene Melamud](https://www.calicolabs.com/team-member/eugene-melamud/)
 - [Victor Chubukov](https://github.com/chubukov)
@@ -221,7 +207,7 @@ Pull requests must include relevant unit tests. All the functional features are 
 - [Kiran Varghese](https://github.com/kiranvarghese2)
 - [Naman Gupta](https://github.com/naman)
 - [Francis Lee](https://github.com/francisglee)
->>>>>>> f975f173a30cc6a5a67bae1c1d256a3f15f7000d
+- [Avijit Zutshi](https://github.com/avijitzutshi)
 
 ## References
 
