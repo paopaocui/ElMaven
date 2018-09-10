@@ -69,15 +69,6 @@ El-MAVEN loads with two windows: one for logging the application status and anot
 ### Ubuntu
 
 - Open the terminal and give the following commands to set up libraries and tool chains for El-MAVEN.
-<<<<<<< HEAD
-`sudo apt-get update`  
-`sudo apt-get install g++`  
-`sudo apt-get install qt5-qmake qtbase5-dev qtscript5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev libboost-all-dev lcov libnetcdf-dev`
-`cd <PathToInstallationFolder>    #for example: user@pc:~$ cd Desktop/`  
-`git clone https://github.com/ElucidataInc/ElMaven.git`  
-`./run.sh`  
-`./bin/El_Maven_0.x    #for example: ./bin/El_Maven_0.2`
-=======
   `sudo apt-get update`  
   `sudo apt-get install g++`  
   `sudo apt-get install qt5-qmake qtbase5-dev qtscript5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev libboost-all-dev lcov`  
@@ -85,7 +76,6 @@ El-MAVEN loads with two windows: one for logging the application status and anot
   `git clone https://github.com/ElucidataInc/ElMaven.git`  
   `./run.sh`  
   `./bin/El_Maven_0.x #for example: ./bin/El_Maven_0.2`
->>>>>>> f975f173a30cc6a5a67bae1c1d256a3f15f7000d
 
 El-MAVEN loads with two windows: one for logging the application status and another El-MAVEN application window for data analysis.
 
