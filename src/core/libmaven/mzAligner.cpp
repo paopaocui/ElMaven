@@ -11,6 +11,7 @@
 Aligner::Aligner() {
        maxItterations=10;
        polynomialDegree=3;
+       refSample = nullptr;
 }
 
 void Aligner::preProcessing(vector<PeakGroup*>& peakgroups, bool alignWrtExpectedRt) {
@@ -499,15 +500,14 @@ void Aligner::alignWithObiWarp(vector<mzSample*> samples,  ObiParams* obiParams,
 
     ObiWarp* obiWarp = new ObiWarp(obiParams);
 
+    refSample = samples[referenceSampleIndex];
     float binSize = obiParams->binSize;
     float minMzRange = 1e9;
     float maxMzRange = 0;
-    
-    mzSample* referenceSample = samples[referenceSampleIndex];
-    for(int j=0;j<referenceSample->scans.size();++j){
-            for(int k=0;k<referenceSample->scans[j]->mz.size();++k){
-                minMzRange = min ( minMzRange, referenceSample->scans[j]->mz[k] );
-                maxMzRange = max ( maxMzRange, referenceSample->scans[j]->mz[k] );
+    for(int j=0;j<refSample->scans.size();++j){
+            for(int k=0;k<refSample->scans[j]->mz.size();++k){
+                minMzRange = min ( minMzRange, refSample->scans[j]->mz[k] );
+                maxMzRange = max ( maxMzRange, refSample->scans[j]->mz[k] );
             }
     }
 
@@ -517,12 +517,11 @@ void Aligner::alignWithObiWarp(vector<mzSample*> samples,  ObiParams* obiParams,
         minMzRange = 0.f;
     minMzRange = floor(minMzRange);
     maxMzRange = ceil(maxMzRange);
-
     vector<float> mzPoints;
     for(float bin = minMzRange; bin <= maxMzRange; bin += binSize)
         mzPoints.push_back(bin);
 
-    alignSampleRts(referenceSample, mzPoints, *obiWarp, true);
+    alignSampleRts(refSample, mzPoints, *obiWarp, true);
 
     #pragma omp parallel for
     for(int i=0 ; i < samples.size();++i){

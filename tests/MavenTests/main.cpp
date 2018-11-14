@@ -84,6 +84,12 @@ int main(int argc, char** argv) {
         result |= QTest::qExec(new TestIsotopeLogic, argc, argv);
     result|=readLog("testIsotopeLogic.xml");
 
+
+    if (freopen("testMzAligner.xml", "w", stdout)) {
+        result |= QTest::qExec(new TestMzAligner, argc, argv);
+    }
+    result|=readLog("testMzAligner.xml");
+
     return result;
 }
 
